@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 460" role="img" aria-label="Placeholder for the artwork Reliquary">
+  <rect width="640" height="460" fill="#f2f3f5"/>
+  <g fill="none" stroke="#d5d7db" stroke-width="1.5">
+    <circle cx="320" cy="215" r="120"/>
+    <rect x="200" y="95" width="240" height="240"/>
+    <path d="M200 335 L440 95 M200 95 L440 335"/>
+  </g>
+  <text x="320" y="440" text-anchor="middle" font-family="monospace" font-size="11"
+        letter-spacing="2" fill="#94989f">PLACEHOLDER — DROP ARTWORK HERE</text>
+</svg>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Archive · bodymodarchive</title>
+<meta name="description" content="Six packages, one per kind of modification. Open one to read the works filed under it.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <a class="wordmark" href="index.html">bodymodarchive</a>
+  <nav>
+    <a href="packages.html">Categories</a>
+    <a href="archive.html">List</a>
+    <a href="about.html">About</a>
+    <a href="submit.html">Submit</a>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- Rendered from TAGS in js/data.js — one package per tag, in that order. -->
+  <ul class="packages" id="packages"></ul>
+
+</div>
+
+
+<script src="js/data.js"></script>
+<script src="js/packages.js"></script>
+<script src="js/wobble.js"></script>
+</body>
+</html>

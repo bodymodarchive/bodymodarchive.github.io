@@ -1,0 +1,611 @@
+/* bodymodarchive — clinical archive aesthetic
+   paper + ink + one accent. mono for the chart, serif for the reading. */
+
+/* Wittgenstein — SIL Open Font Licence (see assets/fonts/Wittgenstein-OFL.txt).
+   True italic, not a synthesised slant: poems and prose lean on it. */
+@font-face {
+  font-family: "Wittgenstein";
+  src: url("../assets/fonts/Wittgenstein-VariableFont_wght.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Wittgenstein";
+  src: url("../assets/fonts/Wittgenstein-Italic-VariableFont_wght.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --paper: #ffffff;
+  --paper-2: #f2f3f5;
+  --ink: #16171a;
+  --ink-soft: #565a61;
+  --ink-faint: #94989f;
+  --rule: #d5d7db;
+  --accent: #1c3a6e;      /* ink blue */
+  --mono: "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+  --serif: "Wittgenstein", "Iowan Old Style", Palatino, Georgia, serif;
+  --measure: 34rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #16161a;
+    --paper-2: #1e1e23;
+    --ink: #e9eaec;
+    --ink-soft: #a0a4ac;
+    --ink-faint: #676b73;
+    --rule: #33343a;
+    /* Lifted well above the light-mode blue — #1c3a6e on a dark ground is
+       nearly invisible. */
+    --accent: #7ea6e8;
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* Holds the #wobble filter definition; never rendered itself. */
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Drawn border framing the whole viewport — same weight, radius and
+   turbulence as the cover button, so it reads as the same pen.
+   pointer-events:none so it never swallows a click; fixed so the page
+   scrolls underneath it. */
+.page-frame {
+  position: fixed;
+  inset: 13px;
+  z-index: 100;
+  pointer-events: none;
+  border: 2.2px solid var(--ink);
+  border-radius: 5px 2px 4px 2px / 2px 4px 2px 5px;
+  filter: url("#frame");
+}
+
+/* Below this the inset frame costs more width than it's worth. */
+@media (max-width: 48rem) {
+  .page-frame { display: none; }
+}
+
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+/* ---------- chrome ---------- */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.1rem 1.5rem;
+}
+
+.masthead .wordmark {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+/* The wordmark is the way back to the cover, so it gets the same hover as the
+   nav links rather than looking inert. */
+.masthead .wordmark:hover { color: var(--accent); }
+
+.masthead nav {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.masthead nav a { text-decoration: none; margin-left: 1.25rem; transition: color 0.15s; }
+.masthead nav a:hover { color: var(--accent); }
+
+.wrap {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Screen-reader-only. Used for the filter result count, which is announced on
+   change but no longer shown. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- landing ---------- */
+
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* "safe" keeps the wordmark reachable instead of overflowing off the top
+     when the comic is taller than the viewport. */
+  justify-content: safe center;
+  gap: 1.75rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+}
+
+.wordmark-lg {
+  font-family: var(--mono);
+  font-size: clamp(1.1rem, 4vw, 1.6rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* The comic is black line art on white. multiply drops the white out against
+   the paper; in dark mode we invert to white-on-black and screen it instead. */
+.comic {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  line-height: 0;
+}
+
+.comic img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 60vh;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-color-scheme: dark) {
+  .comic img {
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+}
+
+/* Stands in for the caption box that used to be drawn under the comic.
+   Boxed and lettered like .enter so the two read as a pair. */
+.cover-question {
+  margin: 0;
+  /* The line needs ~44rem to sit on one row at the clamped desktop size; 46
+     leaves headroom for a slightly longer edit. Narrow screens shrink the
+     font first and only wrap once there's genuinely no room. */
+  max-width: 46rem;
+  font-family: var(--mono);
+  font-size: clamp(0.7rem, 1.6vw, 0.84rem);
+  letter-spacing: 0.11em;
+  line-height: 1.8;
+  text-transform: uppercase;
+}
+
+
+.enter {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.85rem 2rem;
+  color: var(--ink);
+}
+
+/* The box is drawn on a pseudo-element so the turbulence filter warps only the
+   rule, not the lettering. The lopsided border-radius does the rough shaping;
+   #wobble (defined in index.html) adds the shake. Without filter support the
+   radius alone still reads as hand-drawn rather than broken. */
+.enter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2.2px solid var(--ink);
+  border-radius: 5px 2px 4px 2px / 2px 4px 2px 5px;
+  filter: url("#wobble");
+}
+
+/* Hover does nothing but "boil" the outline — swapping between the three seeds
+   so the box looks redrawn. steps(1) makes each frame snap rather than tween;
+   a smooth morph would read as melting rubber instead of a drawn line.
+   Duration is the whole 3-frame cycle, so 0.9s is 3 redraws a second: shorten
+   it to make the line jitter harder, lengthen it for a lazier shift. */
+.enter:hover::before {
+  animation: boil 0.9s steps(1) infinite;
+}
+
+/* Each frame changes three things at once — the noise field, a hair of
+   rotation, and the line weight. One property alone is too easy to miss; a
+   redrawn line lands in a slightly different place at a slightly different
+   pressure, and it's the combination that reads as "drawn again". */
+@keyframes boil {
+  0% {
+    filter: url("#boil1");
+    transform: rotate(-0.5deg);
+    border-width: 2.2px;
+  }
+  33% {
+    filter: url("#boil2");
+    transform: rotate(0.6deg);
+    border-width: 2.7px;
+  }
+  66% {
+    filter: url("#boil3");
+    transform: rotate(-0.2deg);
+    border-width: 2px;
+  }
+  100% {
+    filter: url("#boil1");
+    transform: rotate(-0.5deg);
+    border-width: 2.2px;
+  }
+}
+
+/* Anything that flickers needs an opt-out; the static rough edge remains. */
+@media (prefers-reduced-motion: reduce) {
+  .enter:hover::before { animation: none; }
+}
+
+@media (max-width: 34rem) {
+  .comic img { max-height: none; }
+}
+
+/* ---------- packages ---------- */
+
+.packages {
+  list-style: none;
+  margin: 0;
+  padding: 4.5rem 0 4rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem 2rem;
+}
+
+.package {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  color: inherit;
+}
+
+/* Fixed box matching the artwork canvas, so the tied and opened drawings —
+   which are different shapes — swap in place instead of resizing the cell. */
+.package-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1420 / 1060;
+}
+
+.package-art .art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: opacity 0.12s ease;
+}
+
+.art-open { opacity: 0; }
+
+.package:hover .art-tied,
+.package:focus-visible .art-tied { opacity: 0; }
+
+.package:hover .art-open,
+.package:focus-visible .art-open { opacity: 1; }
+
+.package:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+.package-label {
+  display: block;
+  margin-top: 0.9rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.package-count {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.package:hover .package-label { color: var(--accent); }
+
+@media (prefers-color-scheme: dark) {
+  .package-art .art {
+    filter: invert(1);
+    mix-blend-mode: screen;
+  }
+}
+
+@media (max-width: 52rem) {
+  .packages { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 30rem) {
+  .packages { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ---------- archive ---------- */
+
+/* Filters are the first thing on the page now, so they carry the top margin
+   the removed heading used to provide. */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  /* A little more room than a plain border needs: the displaced edges stray
+     outside the box and neighbouring chips would otherwise appear to touch. */
+  gap: 0.7rem;
+  padding: 3.5rem 0 1.5rem;
+}
+
+/* Drawn like the piece boxes below, so the filter bar and the list read as one
+   hand. Outline on a ::before again — the filter must not touch the label. */
+.tag-btn {
+  position: relative;
+  z-index: 0;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.9rem;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.tag-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1.6px solid var(--rule);
+  border-radius: 5px 2px 4px 2px / 2px 4px 2px 5px;
+  filter: url("#wobble");
+  transition: background 0.15s, border-color 0.15s;
+}
+
+/* Same three-seed cycle as the list, so neighbouring chips differ. */
+.filters .tag-btn:nth-child(3n + 2)::before { filter: url("#wobble-b"); }
+.filters .tag-btn:nth-child(3n + 3)::before { filter: url("#wobble-c"); }
+
+.tag-btn:hover { color: var(--ink); }
+.tag-btn:hover::before { border-color: var(--ink-soft); }
+
+.tag-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+.tag-btn[aria-pressed="true"] { color: var(--paper); }
+
+.tag-btn[aria-pressed="true"]::before {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.pieces {
+  list-style: none;
+  margin: 0;
+  padding: 1.5rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Each work sits in its own drawn box. Same construction as the cover button:
+   the outline lives on a ::before so the turbulence filter warps the rule and
+   leaves the type crisp. */
+.piece-row {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 0.7rem 1.05rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.piece-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 1.6px solid var(--ink);
+  border-radius: 5px 2px 4px 2px / 2px 4px 2px 5px;
+  filter: url("#wobble");
+  transition: box-shadow 0.15s ease;
+}
+
+/* Shadow on hover only, so the row lifts off the page under the cursor. It
+   lives on the same element as the border, so the turbulence filter displaces
+   both together — put it on the row itself and you'd get a crisp rectangular
+   shadow behind a wobbly outline. */
+.piece-row:hover::before,
+.piece-row:focus-visible::before {
+  box-shadow: 4px 5px 0 rgba(22, 23, 26, 0.22);
+}
+
+/* A near-black shadow vanishes on a near-black ground, so lift the opacity. */
+@media (prefers-color-scheme: dark) {
+  .piece-row:hover::before,
+  .piece-row:focus-visible::before {
+    box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Three seeds cycled down the list so stacked boxes aren't rubber-stamped
+   copies of one another. */
+.pieces li:nth-child(3n + 2) .piece-row::before { filter: url("#wobble-b"); }
+.pieces li:nth-child(3n + 3) .piece-row::before { filter: url("#wobble-c"); }
+
+.piece-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+.piece-main { min-width: 0; }
+
+.piece-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.65rem;
+}
+
+.piece-title {
+  font-size: 1.05rem;
+  line-height: 1.2;
+  transition: color 0.15s;
+}
+
+.piece-row:hover .piece-title { color: var(--accent); }
+
+.piece-author {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+/* The opening line. Prose first paragraphs are long, so hold every row to a
+   single line and let it trail off rather than letting box heights wander. */
+.piece-first {
+  display: block;
+  margin-top: 0.15rem;
+  max-width: var(--measure);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.piece-meta {
+  flex: none;
+  text-align: right;
+}
+
+.piece-tags {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.piece-genre {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.piece-tags {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.empty {
+  padding: 3rem 0;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+@media (max-width: 40rem) {
+  .piece-row { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .piece-meta { text-align: left; }
+}
+
+/* ---------- single piece ---------- */
+
+.piece-view { max-width: var(--measure); margin: 0 auto; padding: 3.5rem 0 2rem; }
+
+.piece-view h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0.6rem 0 0.5rem;
+  font-weight: 500;
+}
+
+.piece-view .byline {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 2.25rem;
+}
+
+.piece-view .body p { margin: 0 0 1.2rem; }
+
+.piece-view .body.verse p {
+  margin: 0;
+  line-height: 1.9;
+}
+
+.piece-view .body.verse p:empty { height: 1.1rem; }
+
+.piece-view figure { margin: 0 0 2rem; }
+.piece-view figure img { width: 100%; height: auto; display: block; }
+
+.back {
+  display: inline-block;
+  margin-top: 3rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.back:hover { color: var(--accent); }
