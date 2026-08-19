@@ -524,9 +524,16 @@ a { color: inherit; }
   gap: 0.1rem 0.65rem;
 }
 
+/* Matches the heading treatment on the piece pages — mono and uppercase —
+   just scaled down for a list row. Sized below the serif display size it
+   replaced, since mono at the same point size reads noticeably larger. */
 .piece-title {
-  font-size: 1.05rem;
-  line-height: 1.2;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.35;
   transition: color 0.15s;
 }
 
@@ -601,12 +608,9 @@ a { color: inherit; }
 
 .piece-view { max-width: var(--measure); margin: 0 auto; padding: 3.5rem 0 2rem; }
 
-.piece-view h1 {
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  line-height: 1.15;
-  margin: 0.6rem 0 0.5rem;
-  font-weight: 500;
-}
+/* Every .piece-view page also carries .page-prose, which owns the heading —
+   see below. Only the shared metrics live here. */
+.piece-view h1 { line-height: 1.3; }
 
 .piece-view .byline {
   font-family: var(--mono);
@@ -617,7 +621,47 @@ a { color: inherit; }
   margin-bottom: 2.25rem;
 }
 
+/* Mono set inside running serif text — the magazine's name, an address. Sized
+   down slightly: mono runs optically larger than the serif at the same point
+   size, so 1em would make it bulge out of the line. */
+.mono-inline {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  letter-spacing: 0.01em;
+}
+
 .piece-view .body p { margin: 0 0 1.2rem; }
+
+.piece-view .body ul {
+  margin: 0 0 1.2rem;
+  padding-left: 1.15rem;
+}
+
+.piece-view .body li { margin-bottom: 0.45rem; }
+
+.piece-view .body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition: color 0.15s;
+}
+
+.piece-view .body a:hover { color: var(--accent); }
+
+/* Reading pages — About, Submit, and the pieces themselves — share one
+   treatment: smaller body copy, and a heading set in the label face at the
+   same scale as the site's other mono headings rather than as display type. */
+.page-prose .body { font-size: 0.8125rem; }
+
+.page-prose h1 {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin: 0 0 1.75rem;
+}
 
 .piece-view .body.verse p {
   margin: 0;

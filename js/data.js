@@ -16,7 +16,7 @@ const TAGS = [
   { slug: "surgery",         label: "Surgery",         note: "elective, corrective, emergency" },
   { slug: "placeholder1",    label: "Placeholder 1",   note: "to be named" },
   { slug: "placeholder2",    label: "Placeholder 2",   note: "to be named" },
-  { slug: "medical-anomaly", label: "Medical Anomaly", note: "the unexplained" },
+  { slug: "placeholder3",    label: "Placeholder 3",   note: "to be named" },
 ];
 
 // Placeholder entries. Every tag has at least one and every genre appears, so
@@ -63,7 +63,7 @@ const PIECES = [
     author: "Author Name",
     genre: "essay",
     // Two tags, to keep the multi-tag case exercised.
-    tags: ["surgery", "medical-anomaly"],
+    tags: ["surgery", "placeholder3"],
     excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     body: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
@@ -114,7 +114,7 @@ const PIECES = [
     title: "Title",
     author: "Author Name",
     genre: "essay",
-    tags: ["medical-anomaly"],
+    tags: ["placeholder3"],
     excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     body: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",

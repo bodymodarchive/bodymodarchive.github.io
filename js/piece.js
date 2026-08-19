@@ -1,12 +1,7 @@
 // Single-piece reader. Reads ?p=<slug> and renders from PIECES.
-
-const GENRE_LABEL = {
-  poetry: "Poetry",
-  fiction: "Fiction",
-  essay: "Essay",
-  comic: "Comic",
-  art: "Visual Art",
-};
+//
+// The genre isn't shown here — it's on the list, and above a title it just
+// restated what the piece obviously is. archive.js keeps its own labels.
 
 const root = document.getElementById("piece");
 const slug = new URLSearchParams(location.search).get("p");
@@ -24,10 +19,6 @@ if (!piece) {
 } else {
   document.title = `${piece.title} · bodymodarchive`;
 
-  const label = document.createElement("span");
-  label.className = "label";
-  label.textContent = GENRE_LABEL[piece.genre] || piece.genre;
-
   const h1 = document.createElement("h1");
   h1.textContent = piece.title;
 
@@ -35,7 +26,7 @@ if (!piece) {
   byline.className = "byline";
   byline.textContent = piece.author;
 
-  root.append(label, h1, byline);
+  root.append(h1, byline);
 
   if (piece.image) {
     const figure = document.createElement("figure");
