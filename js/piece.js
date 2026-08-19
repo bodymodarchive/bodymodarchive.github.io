@@ -33,7 +33,7 @@ if (!piece) {
 
   const byline = document.createElement("div");
   byline.className = "byline";
-  byline.textContent = `${piece.author} — filed under ${piece.tags.map(tagLabel).join(", ")}`;
+  byline.textContent = piece.author;
 
   root.append(label, h1, byline);
 
@@ -66,6 +66,24 @@ if (!piece) {
     body.appendChild(p);
   });
   root.appendChild(body);
+
+  // Tags at the foot of the piece, drawn like the filter chips on the list.
+  // Each links to the list filtered by that tag, so a reader can follow a
+  // thread sideways instead of only backwards.
+  if (piece.tags.length) {
+    const tagRow = document.createElement("div");
+    tagRow.className = "piece-tag-row";
+
+    piece.tags.forEach((slug) => {
+      const tag = document.createElement("a");
+      tag.className = "tag-btn";
+      tag.href = `archive.html?tag=${encodeURIComponent(slug)}`;
+      tag.textContent = tagLabel(slug);
+      tagRow.appendChild(tag);
+    });
+
+    root.appendChild(tagRow);
+  }
 
   const back = document.createElement("a");
   back.className = "back";

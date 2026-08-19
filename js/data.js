@@ -62,7 +62,8 @@ const PIECES = [
     title: "Title",
     author: "Author Name",
     genre: "essay",
-    tags: ["surgery"],
+    // Two tags, to keep the multi-tag case exercised.
+    tags: ["surgery", "medical-anomaly"],
     excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     body: [
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",

@@ -53,8 +53,12 @@
 
 /* Drawn border framing the whole viewport — same weight, radius and
    turbulence as the cover button, so it reads as the same pen.
-   pointer-events:none so it never swallows a click; fixed so the page
-   scrolls underneath it. */
+   pointer-events:none so it never swallows a click.
+
+   Deliberately fixed, so it stays sized to the window as you scroll. The
+   cost is that content passes under its bottom line mid-scroll; anchoring it
+   to the document instead would avoid that, but then the frame no longer
+   tracks the window. */
 .page-frame {
   position: fixed;
   inset: 13px;
@@ -597,9 +601,23 @@ a { color: inherit; }
 .piece-view figure { margin: 0 0 2rem; }
 .piece-view figure img { width: 100%; height: auto; display: block; }
 
+/* Tags at the foot of a piece. Reuses .tag-btn so they're the same drawn chip
+   as the list's filters; the seed cycle is repeated here because the one on
+   .filters is scoped to that container. */
+.piece-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 2.75rem;
+}
+
+.piece-tag-row .tag-btn { text-decoration: none; }
+.piece-tag-row .tag-btn:nth-child(3n + 2)::before { filter: url("#wobble-b"); }
+.piece-tag-row .tag-btn:nth-child(3n + 3)::before { filter: url("#wobble-c"); }
+
 .back {
   display: inline-block;
-  margin-top: 3rem;
+  margin-top: 2.25rem;
   font-family: var(--mono);
   font-size: 0.66rem;
   letter-spacing: 0.14em;
