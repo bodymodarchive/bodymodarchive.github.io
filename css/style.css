@@ -69,9 +69,37 @@
   filter: url("#frame");
 }
 
-/* Below this the inset frame costs more width than it's worth. */
+/* Below this the inset frame costs more width than it's worth. Narrow screens
+   also keep native document scrolling — an inner scroller loses the address
+   bar hiding and the overscroll bounce phones expect. */
 @media (max-width: 48rem) {
   .page-frame { display: none; }
+}
+
+/* Wherever the frame shows, the page scrolls inside it rather than under it.
+   The document itself is locked and .page-scroll becomes the scrollport,
+   sized just inside the drawn line — so a piece is clipped at the border
+   instead of having the border drawn across it. The 17px inset is the
+   frame's 13px offset plus its 2.2px stroke, plus a hair of margin so the
+   filter's wobble can't swing the line over the clipped edge. */
+@media (min-width: 48.0625rem) {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .page-scroll {
+    position: fixed;
+    inset: 17px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* The cover fills the scrollport, not the raw viewport — 100vh here would
+     overshoot by the inset and leave the cover scrolling by ~34px. Scoped via
+     .page-scroll so it outranks the .landing rule defined further down. */
+  .page-scroll .landing { min-height: 100%; }
 }
 
 

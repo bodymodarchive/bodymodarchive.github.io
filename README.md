@@ -107,6 +107,13 @@ that looks right at one size can read cramped or oversized at the same number.
   viewport-sized box is a lot of surface to rasterise. Hidden below 48rem,
   where an inset border costs more width than it earns. Every page loads
   `wobble.js` so the frame is everywhere.
+- **The page frame** is a fixed, inset `div` injected by `js/wobble.js`, drawn
+  with the same pen as the cover button. Because it's fixed, content would
+  normally scroll underneath and get a line drawn across it — so wherever the
+  frame shows, the document is locked and `.page-scroll` becomes the
+  scrollport, sized just inside the drawn line. Pieces clip at the border
+  instead of crossing it. Below 48rem the frame is hidden and native document
+  scrolling comes back, which is what phones want.
 - **Sketchy boxes** (the cover button, every row on the archive) are a normal
   CSS border on a `::before`, warped by an SVG turbulence filter from
   `js/wobble.js`. It goes on the pseudo-element so the outline wobbles and the
